@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button type="button" onclick="addCircle()">ADD Circles</button>
+    <button type="button" onclick="MovingCircle()">RUN</button>
+    <canvas id="myCanvas" width="800px" height="600px" style="border:1px solid #d3d3d3;"></canvas>
+    <script>
+        var canvas = document.getElementById("myCanvas")
+        var ctx = canvas.getContext("2d")
+        canvas.width = 800
+        canvas.height = 600
+        var background = new Image();
+        background.src = "https://img.freepik.com/free-vector/white-background-with-zigzag-pattern-design_1017-33197.jpg";
+
+        background.onload = function(){
+            ctx.drawImage(background,0,0,800,600);   
+}
+        var Circlegroup=[]
+        class Circle {
+            constructor(x, y, radius, color, speedx, speedy){
+            this.x = x;
+            this.y = y;
+            this.radius = radius;
+            this.color = color
+            this.speedx = speedx;
+            this.speedy = speedy;
+            }
+            createCircle = function (ctx) {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.closePath();
+            }
+
+            moveCircle = function (canvas){
+                if (this.x + this.radius > 800 || this.x - this.radius < 0) {
+                    this.speedx = -this.speedx;
+                }
+                if (this.y + this.radius > 600 || this.y - this.radius < 0) {
+                    this.speedy = -this.speedy;
+                }
+                this.x += this.speedx;
+                this.y += this.speedy;
+                
+            }
+
+            increaseSpeed = function(){
+                if(this.speedx > 0){
+                    this.speedx += 2;
+                }else{
+                    this.speedx -= 2;
+                }
+
+                if(this.speedy > 0){
+                    this.speedy += 2;
+                }else{
+                    this.speedy -= 2;
+                }
+            }
+
+            decreaseSpeed = function(){
+                if(this.speedx > 0){
+                    this.speedx -= 2;
+                }else{
+                    this.speedx = 0;
+                }
+
+                if(this.speedy > 0){
+                    this.speedy -= 2;
+                }else{
+                    this.speedy = 0;
+                }
+            }            
+}
+function getRandomHex(){
+    return Math.floor(Math.random()*255);
+}
+
+
+function getRandomColor(){
+   var red = getRandomHex();
+   var green = getRandomHex();
+   var blue = getRandomHex();
+	 return "rgb(" + red + "," + blue + "," + green +")";
+}
+
+function clearCircle() {
+            ctx.clearRect(0, 0, 800, 600);
+        }
+function addCircle(){
+    let a = +prompt('Enter number of Circle:');
+    for(i=0;i<a;i++){
+        let x = Math.random() * 800;
+        let y = Math.random() * 600;
+        let radius = Math.floor(Math.random() * 80);
+        let color = getRandomColor()
+        let speedx = Math.floor(Math.random() * 5);
+        let speedy = Math.floor(Math.random() * 5);
+        Circlegroup.push(new Circle(x,y,radius,color,speedx,speedy))
+    }
+    for(i=0;i<Circlegroup.length;i++){
+        Circlegroup[i].createCircle(ctx)
+    }
+}
+function MovingCircle(){
+    clearCircle();
+    ctx.drawImage(background,0,0,800,600);
+    for(i=0;i<Circlegroup.length;i++){
+        Circlegroup[i].createCircle(ctx)
+        Circlegroup[i].moveCircle(canvas)
+    }
+    requestAnimationFrame(MovingCircle)
+}
+
+// function Moving(){
+//     this.speedx = Math.floor(Math.random()*5);
+//     this.speedy = Math.floor(Math.random()*5);
+//     if (this.x > window.width || this.x < 0){
+//         this.speedx = -this.speedx;
+//     }
+//     if (this.y > window.height || this.y < 0){
+//         this.speedy = -this.speedy;
+//     }
+//     this.x += this.speedx;
+//     this.y += this.speedy;
+//     requestAnimationFrame(Moving);
+// }
+
+
+
+
+
+    </script>
+</body>
+</html>
